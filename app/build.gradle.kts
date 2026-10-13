@@ -40,7 +40,11 @@ android {
 }
 
 dependencies {
-
+    // ViewModel integration for Jetpack Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
+    // Retrofit & Gson converter for web API networking
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
