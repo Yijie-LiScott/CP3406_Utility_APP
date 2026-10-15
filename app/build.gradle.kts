@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlinx-serialization")
 }
 
 android {
@@ -32,7 +33,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-       jvmTarget = "17"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -42,9 +43,14 @@ android {
 dependencies {
     // ViewModel integration for Jetpack Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
-    // Retrofit & Gson converter for web API networking
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
+
+    // Retrofit & Kotlinx Serialization
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

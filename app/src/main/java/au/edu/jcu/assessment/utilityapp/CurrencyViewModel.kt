@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import au.edu.jcu.assessment.utilityapp.data.ConvertedRate
 import au.edu.jcu.assessment.utilityapp.data.CurrencyRepository
+import au.edu.jcu.assessment.utilityapp.data.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,27 +52,30 @@ class CurrencyViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            val result = repository.fetchRates(base)
-            result.onSuccess { response ->
-                cachedRates = response.rates
-                val parsedAmount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0
-                val converted = calculateConversions(parsedAmount, cachedRates)
+            when (val result = repository.fetchRates(base)) {
+                is NetworkResult.Success -> {
+                    val response = result.data
+                    cachedRates = response.rates
+                    val parsedAmount = _uiState.value.amountInput.toDoubleOrNull() ?: 0.0
+                    val converted = calculateConversions(parsedAmount, cachedRates)
 
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        baseCurrency = response.baseCode,
-                        lastUpdated = response.timeLastUpdate,
-                        convertedRates = converted,
-                        errorMessage = null
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            baseCurrency = response.baseCode,
+                            lastUpdated = response.timeLastUpdate,
+                            convertedRates = converted,
+                            errorMessage = null
+                        )
+                    }
                 }
-            }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = error.localizedMessage ?: "Failed to load exchange rates"
-                    )
+                is NetworkResult.Error -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = result.error
+                        )
+                    }
                 }
             }
         }
