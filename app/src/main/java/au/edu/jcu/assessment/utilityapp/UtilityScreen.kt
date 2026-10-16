@@ -20,16 +20,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import au.edu.jcu.assessment.utilityapp.data.ConvertedRate
+import org.koin.androidx.compose.koinViewModel
 import java.util.Locale
 
 @Composable
 fun UtilityScreen(
+    viewModel: CurrencyViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    UtilityContent(
+        uiState = uiState,
+        onAmountChange = { viewModel.onAmountChanged(it) },
+        onRetry = { viewModel.loadRates(uiState.baseCurrency) }
+    )
+}
+
+@Composable
+fun UtilityContent(
     uiState: CurrencyUiState,
     onAmountChange: (String) -> Unit,
     onRetry: () -> Unit
@@ -39,7 +55,6 @@ fun UtilityScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Screen Header
         Text(
             text = "Currency QuickView",
             style = MaterialTheme.typography.headlineMedium,
@@ -53,7 +68,6 @@ fun UtilityScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Input text field for entering base currency amount
         OutlinedTextField(
             value = uiState.amountInput,
             onValueChange = onAmountChange,
@@ -65,7 +79,6 @@ fun UtilityScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // State handling: loading indicator, error display, or converted rate list
         when {
             uiState.isLoading -> {
                 Box(
@@ -106,7 +119,6 @@ fun UtilityScreen(
     }
 }
 
-// Reusable card composable for displaying each target currency item
 @Composable
 fun CurrencyCard(item: ConvertedRate) {
     Card(

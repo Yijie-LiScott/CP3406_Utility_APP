@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class CurrencyRepository(
-    private val apiService: CurrencyApiService = CurrencyApiService.create(),
+    private val apiService: CurrencyApiService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     suspend fun fetchRates(baseCurrency: String): NetworkResult<ExchangeRateResponse> {

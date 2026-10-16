@@ -45,6 +45,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
 
+    // Koin Dependency Injection
+    implementation("io.insert-koin:koin-core:3.4.3")
+    implementation("io.insert-koin:koin-android:3.4.3")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.6")
+
     // Retrofit & Kotlinx Serialization
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")

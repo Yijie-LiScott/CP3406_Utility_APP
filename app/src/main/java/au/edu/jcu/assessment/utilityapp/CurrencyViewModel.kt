@@ -23,7 +23,7 @@ data class CurrencyUiState(
 
 // ViewModel responsible for handling conversion business logic and repository interaction
 class CurrencyViewModel(
-    private val repository: CurrencyRepository = CurrencyRepository()
+    private val repository: CurrencyRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CurrencyUiState())

@@ -15,14 +15,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import au.edu.jcu.assessment.utilityapp.ui.theme.MobileTech_UtilityAppTheme
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +37,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun UtilityApp(viewModel: CurrencyViewModel = viewModel()) {
+fun UtilityApp(
+    viewModel: CurrencyViewModel = koinViewModel()
+) {
     var selectedTab by remember { mutableStateOf("Utility") }
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         bottomBar = {
@@ -61,7 +63,7 @@ fun UtilityApp(viewModel: CurrencyViewModel = viewModel()) {
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedTab) {
-                "Utility" -> UtilityScreen(
+                "Utility" -> UtilityContent(
                     uiState = uiState,
                     onAmountChange = { viewModel.onAmountChanged(it) },
                     onRetry = { viewModel.loadRates(uiState.baseCurrency) }
