@@ -16,8 +16,9 @@ Unlike generic multi-screen calculators, this app implements a real-world **Curr
    ```bash
    git clone https://github.com/Yijie-LiScott/CP3406_Utility_APP.git
    
-2. Open in Android Studio  
-3. Run on an emulator or physical device (API 26+ recommended)  
+2. Open the project in Android Studio 
+3. Sync Project with Gradle Files
+4. Run on an emulator or physical device (API 26+ recommended)  
 
 ---
 
@@ -25,8 +26,8 @@ Unlike generic multi-screen calculators, this app implements a real-world **Curr
 
 ### UtilityApp()
 - Contains the screen layout using a Scaffold and a Material 3 NavigationBar
-- Toggles content between the primary Utility screen and the Settings screen
-- Collects and observes reactive state (CurrencyUiState) emitted from Currency ViewModel
+- Injects CurrencyViewModel using koinViewModel() and safely collects CurrencyUiState via collectAsStateWithLifecycle()
+- Switches dynamically between the primary UtilityScreen and SettingScreen
 ### UtilityScreen()
 - Changed the starter counter with a complete real-time currency conversion interface
 - Features an OutlinedTextField with decimal input support to set the base amount
@@ -42,22 +43,22 @@ Unlike generic multi-screen calculators, this app implements a real-world **Curr
 
 ## Key Concepts Covered
 
-| Week | Concept                        | Used In                                                                          |
-|------|--------------------------------|----------------------------------------------------------------------------------|
-| 1    | Kotlin + Android Studio         | MainActivity.kt                                                                  |
-| 2    | Jetpack Compose Layouts         | UtilityApp(), UtilityScreen(), SettingsScreen(), CurrencyCard                    |
-| 3    | Material Design 3               | MobileTechUtilityAppTheme, MaterialTheme.typography, CardDefaults, NavigationBar |
-| 4    | ViewModel | CurrencyViewModel.kt (MVVM pattern, reactive StateFlow, UI state encapsulation   |
-| 5    | Retrofit  | CurrencyApi.kt, CurrencyRepository.kt (Asynchronous HTTP, Gson deserialization   |
+| Week | Concept                            | Used In                                                                             |
+|------|------------------------------------|-------------------------------------------------------------------------------------|
+| 1    | Kotlin + Android Studio            | MainActivity.kt                                                                     |
+| 2    | Jetpack Compose Layouts &UDF       | UtilityScreen.kt, SettingsScreen.kt, CurrencyCard                                   |
+| 3    | Material Design 3 &Lifecycle State | MobileTechUtilityAppTheme, collectAsStateWithLifecycle(), NavigationBar             |
+| 4    | MVVM &Dependency Injection(Koin)   | CurrencyViewModel.kt, Modules.kt, UtilityApplication.kt, KoinViewModel()            |
+| 5    | Retrofit & Modern Networking       | CurrencyApiService.kt, CurrencyRepository.kt (kotlinx.serialization, NetworkResult) |
 
 ---
 
 ## Suggested Extensions
 - [√]Replace counter with a real utility: Replaced the counter placeholder with an instant multi-currency converter providing live, at-a-glance financial calculations  
 - [√]Add a ViewModel for state management: Implemented CurrencyViewModel using unidirectional data flow (UDF) and StateFlow to manage loading, error, input, and rate calculation states  
-- Use SharedPreferences or DataStore to persist settings  
-- [√]Add a simple API call using Retrofit: Integrated Retrofit 2 +Gson with Kotlin Coroutines to fetch live exchange rates from the Open ExchangeRate API 
-- [√]Comprehensive Unit Testing Suite: Added JUnit 4 test suites (CurrencyRepositoryTest and CurrencyViewModelTest) covering network repository responses and calculation accuracy
+- [√]Koin Dependency Injection: Integrated Koin DI(koin-core, koin-android, koin-androidx-compose) to eliminate tightly coupled instances  
+- [√]Modern Networking: Replaced legacy parsers with Retrofit2 + kotlinx.serialization and encapsulated responses using NetworkResult
+- [√]Unit Testing Suite: Added JUnit 4 test suites (CurrencyRepositoryTest and CurrencyViewModelTest) covering network repository responses and calculation accuracy
 ---
 
 ## 📚 License
